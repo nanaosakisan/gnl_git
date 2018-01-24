@@ -17,6 +17,8 @@ char	*ft_strcat(char *s1, const char *s2)
 	int i;
 	int j;
 
+	if (!s1 || !s2)
+		return (0);
 	if (ft_strlen(s1) == 0)
 	{
 		ft_memcpy(s1, s2, ft_strlen(s2));
