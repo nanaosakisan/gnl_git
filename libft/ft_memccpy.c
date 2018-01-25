@@ -21,6 +21,8 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 	car = c;
 	dest = (unsigned char *)dst;
 	source = (unsigned char *)src;
+	if (!n)
+		return(NULL);
 	while (n > 0)
 	{
 		*dest = *source;

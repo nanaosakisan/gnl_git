@@ -26,8 +26,12 @@ int		main(int argc, char **argv)
 			return (0);
 		while (get_next_line(fd, &line))
 		{
-			// ft_putstr("line : ");
-			// ft_putstr(line);
+			ft_putstr("line : ");
+			if (line)
+			{
+				ft_putstr(line);
+				// ft_putchar('\n');
+			}
 		}
 	}
 	if (close(fd) == -1)

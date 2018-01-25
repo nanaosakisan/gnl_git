@@ -17,7 +17,7 @@ int		get_next_line(int fd, char **line)
 	int			ret;
 	char		buff[BUFF_SIZE + 1];
 	char		*tmp;
-	static char	*reste;
+	static char	*reste = NULL;
 	int			i;
 
 	if (!fd || fd < 0)
@@ -27,38 +27,47 @@ int		get_next_line(int fd, char **line)
 	if (!(tmp = ft_strnew(BUFF_SIZE)))
 		return (0);
 	ret = 0;
-	reste = ((reste) ? reste : NULL);
-	if (reste)
+	if (ft_strlen(reste))
 	{
 		while (*reste == '\n')
 			reste++;
 		ft_strcat(tmp, reste);
-		ft_bzero(&reste, ft_strlen(reste));
-		i = -1;
-		if (tmp[++i] == '\n')
+		i = 0;
+		if (tmp[i] != '\n')
 			i++;
 		else
 			reste = ft_strsub(tmp, i, (size_t)ft_strlen(tmp));
-
 	}
-	while ((ret = read(fd, buff, BUFF_SIZE)) >= 0 && !ft_strchr(tmp, '\n'))
+	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		buff[ret] = '\0';
-		tmp = ft_strjoin(tmp, buff);
-		if (ft_strchr(buff, '\n') != NULL)
+		if (!ft_strchr(buff, '\n'))
 		{
+			ft_putendl("entree if");
+			tmp = ft_strjoin(tmp, buff);
+		}
+		else
+		{
+			if (!tmp)
+				ft_memccpy(tmp, buff, '\n', ft_strlen(buff));
+			else
+			{
+				i = ft_strlen(tmp);
+				ft_memccpy(tmp + i, buff, '\n', (ft_strlen(buff) - 1));
+				ft_putstr("tmp else :");
+				ft_putendl(tmp);
+			}
 			i = 0;
 			while (buff[i] != '\n')
 				i++;
-			reste = ft_strsub(buff, i, (size_t)BUFF_SIZE);
+			reste = ft_strsub(buff, i, ft_strlen(buff));
+			break;
 		}
 	}
-	ft_strcat(reste, buff);
-	ft_putstr(reste);
-	ft_memccpy(*line, tmp, '\n', ft_strlen(tmp));
-	// ft_putstr(*line);
+
+	ft_strcat(*line, tmp);
 	ft_memdel((void **)&tmp);
-	if (ret == 0 && !reste)
+	if (ret == 0 && !ft_strlen(reste))
 		return (0);
 	else
 		return (1);
