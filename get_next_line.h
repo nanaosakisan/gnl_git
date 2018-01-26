@@ -18,7 +18,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-# define	BUFF_SIZE 2
+# define	BUFF_SIZE 1
+
 
 int			main(int argc, char **argv);
 int			get_next_line(const int fd, char **line);

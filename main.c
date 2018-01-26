@@ -24,14 +24,10 @@ int		main(int argc, char **argv)
 	{
 		if((fd = open(argv[1], O_RDONLY)) == -1)
 			return (0);
-		while (get_next_line(fd, &line))
+		while (get_next_line(fd, &line) > 0)
 		{
-			ft_putstr("line : ");
 			if (line)
-			{
-				ft_putstr(line);
-				// ft_putchar('\n');
-			}
+				ft_putendl(line);
 		}
 	}
 	if (close(fd) == -1)
