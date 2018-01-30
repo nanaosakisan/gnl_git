@@ -49,7 +49,7 @@ int		get_next_line(int fd, char **line)
 	char		buff[ft_strlen(reste) + BUFF_SIZE + 1];
 	char		*tmp;
 
-	if (!fd || fd < 0)
+	if (fd < 0)
 		return (-1);
 	if (!(*line = ft_strnew(BUFF_SIZE)))
 		return (0);
@@ -61,13 +61,17 @@ int		get_next_line(int fd, char **line)
 		buff[ret] = '\0';
 		if (!(read_buff((char*)&buff, &reste, &tmp)))
 			break;
-
 	}
-	tmp[ft_strlen(tmp) - 1] = '\0';
-	ft_strcat(*line, tmp);
+	if (ret == -1)
+		return (-1);
+	if (ft_strchr(tmp, '\n'))
+		tmp[ft_strlen(tmp) - 1] = '\0';
+	else
+		tmp[ft_strlen(tmp)] = '\0';
+	ft_strcat(*line, ft_strtrim(tmp));
 	ft_memdel((void **)&tmp);
 	ft_bzero(buff, ft_strlen(buff));
-	if (ret == 0 && !ft_strlen(reste))
+	if (ret == 0 && !ft_strlen(reste) && !ft_strlen(*line))
 		return (0);
 	return (1);
 }
