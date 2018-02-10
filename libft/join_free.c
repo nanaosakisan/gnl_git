@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memccpy.c                                       :+:      :+:    :+:   */
+/*   join_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iporsenn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/24 18:44:18 by iporsenn          #+#    #+#             */
-/*   Updated: 2017/11/24 18:44:25 by iporsenn         ###   ########.fr       */
+/*   Created: 2018/02/06 15:20:06 by iporsenn          #+#    #+#             */
+/*   Updated: 2018/02/06 15:20:08 by iporsenn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+char	*join_free(char **s1, char *s2)
 {
-	unsigned char	*dest;
-	unsigned char	*source;
-	unsigned char	car;
+	char	*dest;
 
-	if (n > strlen(dst))
-		ft_putstr("SAUCISSE");
-	car = c;
-	dest = (unsigned char *)dst;
-	source = (unsigned char *)src;
-	if (!n)
-		return(NULL);
-	while (n > 0)
-	{
-		*dest = *source;
-		if (*dest == car)
-			return ((void *)dest + 1);
-		n--;
-		dest++;
-		source++;
-	}
-	return (NULL);
+	if (!*s1 || !s2)
+		return (0);
+	dest = 0;
+	if (!(dest = ft_strnew(ft_strlen(*s1) + ft_strlen(s2))))
+		return (NULL);
+	ft_strcpy(dest, *s1);
+	ft_strcat(dest, (s2));
+	ft_memdel((void**)s1);
+	return (dest);
 }

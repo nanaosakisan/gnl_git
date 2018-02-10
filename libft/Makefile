@@ -70,7 +70,8 @@ SRC_NAME =	ft_atoi.c		\
 			ft_strsub.c		\
 			ft_strtrim.c	\
 			ft_toupper.c	\
-			ft_tolower.c	
+			ft_tolower.c	\
+			join_free.c
 
 SRC =  $(addprefix $(SRC_PATH), $(SRC_NAME))
 
@@ -85,13 +86,14 @@ FLAGS = -Wall -Werror -Wextra -c
 all: $(NAME)
 
 $(NAME):
-	gcc $(SRC) $(INCLUDE) $(FLAGS)
-	ar rc libft.a $(OBJ)
+	@echo "\033[32mBuilding libft\033[0m"
+	@gcc $(SRC) $(INCLUDE) $(FLAGS)
+	@ar rc libft.a $(OBJ)
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all

@@ -1,36 +1,29 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iporsenn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/05 14:51:23 by iporsenn          #+#    #+#             */
-/*   Updated: 2018/01/05 14:51:25 by iporsenn         ###   ########.fr       */
+/*   Created: 2018/01/30 15:22:00 by iporsenn          #+#    #+#             */
+/*   Updated: 2018/01/30 15:22:02 by iporsenn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-int		main(int argc, char **argv)
+int				main(void)
 {
-	int		fd;
-	char	*line;
+	char		*line;
+	int			fd;
 
-	line = NULL;
-	if (argc < 2)
-		return (0);
-	else
+	fd = open("test", O_RDONLY);
+	while (get_next_line(fd, &line))
 	{
-		if((fd = open(argv[1], O_RDONLY)) == -1)
-			return (0);
-		while (get_next_line(fd, &line) > 0)
-		{
-			if (line)
-				ft_putendl(line);
-		}
+		ft_putstr("line = ");
+		ft_putendl(line);
 	}
-	if (close(fd) == -1)
-		return (0);
+	close(fd);
 	return (0);
 }

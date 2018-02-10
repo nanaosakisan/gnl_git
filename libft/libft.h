@@ -83,5 +83,6 @@ char				*ft_strsub(const char *s, unsigned int start, size_t len);
 char				*ft_strtrim(const char *s);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
+char				*join_free(char **s1, char *s2);
 
 #endif

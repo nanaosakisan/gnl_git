@@ -12,31 +12,60 @@
 
 #include "get_next_line.h"
 
+char	*ft_strccpy(char *dst, const char *src, int c, size_t n)
+{
+	char			*ret;
+	unsigned char	car;
+	int				i;
+
+	car = c;
+	i = ft_strlen(dst);
+	if (!n)
+		return(NULL);
+	if (!(ret = ft_strnew(ft_strlen(dst) + n)))
+		return (NULL);
+	ft_memcpy(ret, dst, i);
+	if (src[0] == c)
+		return (ret);
+	while (n > 0)
+	{
+		ret[i] = *src;
+		if (ret[i] == car)
+		{
+			ft_memdel((void**)&dst);
+			return (ret);
+		}
+		n--;
+		i++;
+		src++;
+	}
+	return (NULL);
+}
+
 static int	read_buff(char *buff, char **reste, char **tmp)
 {
 	int		i;
 
 	if (ft_strlen(*reste))
 	{
-		(*reste)++;
 		buff = ft_strjoin(*reste, buff);
-		ft_bzero(*reste, ft_strlen(*reste));
+		ft_memdel((void**)reste);
 	}
 	if (!ft_strchr(buff, '\n'))
-		*tmp = ft_strjoin(*tmp, buff);
+		*tmp = join_free(tmp, buff);
 	else
 	{
 		if (!*tmp)
-			ft_memccpy(*tmp, buff, '\n', ft_strlen(buff));
-		else
 		{
-			i = ft_strlen(*tmp);
-			ft_memccpy(*tmp + i, buff, '\n', (ft_strlen(buff)));
+			*tmp = ft_strccpy(*tmp, buff, '\n', ft_strlen(buff));
+			*tmp[ft_strlen(*tmp)] = '\0';
 		}
+		else
+			*tmp = ft_strccpy(*tmp, buff, '\n', ft_strlen(buff));
 		i = 0;
 		while (buff[i] != '\n')
 			i++;
-		*reste = ft_strsub(buff, i, ft_strlen(buff));
+		*reste = ft_strsub(buff, i + 1, ft_strlen(buff) - 1);
 		return (0);
 	}
 	return (1);
@@ -49,7 +78,7 @@ int		get_next_line(int fd, char **line)
 	char		buff[ft_strlen(reste) + BUFF_SIZE + 1];
 	char		*tmp;
 
-	if (fd < 0)
+	if (fd < 0 || !line)
 		return (-1);
 	if (!(*line = ft_strnew(BUFF_SIZE)))
 		return (0);
@@ -60,14 +89,10 @@ int		get_next_line(int fd, char **line)
 	{
 		buff[ret] = '\0';
 		if (!(read_buff((char*)&buff, &reste, &tmp)))
-			break;
+			break ;
 	}
 	if (ret == -1)
 		return (-1);
-	if (ft_strchr(tmp, '\n'))
-		tmp[ft_strlen(tmp) - 1] = '\0';
-	else
-		tmp[ft_strlen(tmp)] = '\0';
 	ft_strcat(*line, ft_strtrim(tmp));
 	ft_memdel((void **)&tmp);
 	ft_bzero(buff, ft_strlen(buff));
