@@ -52,6 +52,7 @@ void				ft_putendl(const char *s);
 void				ft_putendl_fd(const char *s, int fd);
 void				ft_putnbr(int n);
 void				ft_putnbr_fd(int n, int fd);
+void				ft_putnbr_endl(int n);
 void				ft_putstr(const char *s);
 void				ft_putstr_fd(const char *s, int fd);
 char				*ft_strcat(char *s1, const char *s2);
@@ -83,6 +84,5 @@ char				*ft_strsub(const char *s, unsigned int start, size_t len);
 char				*ft_strtrim(const char *s);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
-char				*join_free(char **s1, char *s2);
 
 #endif

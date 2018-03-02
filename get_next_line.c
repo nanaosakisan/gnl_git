@@ -11,20 +11,54 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h> //daw
 
+static char	*join_free(char *s1, char *s2)
+{
+	char	*ret;
+	int 	i;
+	int 	j;
+	int 	size;
+
+	size = ft_strlen(s1) + ft_strlen(s2);
+	if (!(ret = (char*)malloc(sizeof(char) * (size + 1))))
+		return (NULL);
+	ret[size] = '\0';
+	i = -1;
+	j = 0;
+	while (s1[++i])
+	{
+		ret[j] = s1[i];
+		j++;
+	}
+	i = -1;
+	while (s2[++i])
+	{
+		ret[j] = s2[i];
+		j++;
+	}
+	return (ret);
+}
 char	*ft_strccpy(char *dst, const char *src, int c, size_t n)
 {
 	char			*ret;
 	unsigned char	car;
 	int				i;
+	int				size;
 
 	car = c;
-	i = ft_strlen(dst);
+	size = ft_strlen(dst) + n;
 	if (!n)
 		return(NULL);
-	if (!(ret = ft_strnew(ft_strlen(dst) + n)))
+	if (!(ret = (char*)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
-	ft_memcpy(ret, dst, i);
+	ft_bzero(ret, size);
+	i = 0;
+	while (dst[i])
+	{
+		ret[i] = dst[i];
+		i++;
+	}
 	if (src[0] == c)
 		return (ret);
 	while (n > 0)
@@ -32,7 +66,7 @@ char	*ft_strccpy(char *dst, const char *src, int c, size_t n)
 		ret[i] = *src;
 		if (ret[i] == car)
 		{
-			ft_memdel((void**)&dst);
+			ft_strdel(&dst);
 			return (ret);
 		}
 		n--;
@@ -44,24 +78,18 @@ char	*ft_strccpy(char *dst, const char *src, int c, size_t n)
 
 static int	read_buff(char *buff, char **reste, char **tmp)
 {
-	int		i;
+	int	i;
 
 	if (ft_strlen(*reste))
 	{
-		buff = ft_strjoin(*reste, buff);
+		buff = ft_strcat(*reste, buff);
 		ft_memdel((void**)reste);
 	}
 	if (!ft_strchr(buff, '\n'))
-		*tmp = join_free(tmp, buff);
+		*tmp = join_free(*tmp, buff);
 	else
 	{
-		if (!*tmp)
-		{
-			*tmp = ft_strccpy(*tmp, buff, '\n', ft_strlen(buff));
-			*tmp[ft_strlen(*tmp)] = '\0';
-		}
-		else
-			*tmp = ft_strccpy(*tmp, buff, '\n', ft_strlen(buff));
+		*tmp = ft_strccpy(*tmp, buff, '\n', ft_strlen(buff));
 		i = 0;
 		while (buff[i] != '\n')
 			i++;
@@ -88,14 +116,12 @@ int		get_next_line(int fd, char **line)
 	while ((ret = read(fd, buff, BUFF_SIZE)) > 0 || ft_strlen(reste))
 	{
 		buff[ret] = '\0';
-		if (!(read_buff((char*)&buff, &reste, &tmp)))
+		if (!(read_buff(buff, &reste, &tmp)))
 			break ;
 	}
 	if (ret == -1)
 		return (-1);
 	ft_strcat(*line, ft_strtrim(tmp));
-	ft_memdel((void **)&tmp);
-	ft_bzero(buff, ft_strlen(buff));
 	if (ret == 0 && !ft_strlen(reste) && !ft_strlen(*line))
 		return (0);
 	return (1);

@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   join_free.c                                        :+:      :+:    :+:   */
+/*   ft_putnbr_endl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iporsenn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/06 15:20:06 by iporsenn          #+#    #+#             */
-/*   Updated: 2018/02/06 15:20:08 by iporsenn         ###   ########.fr       */
+/*   Created: 2018/02/13 10:07:07 by iporsenn          #+#    #+#             */
+/*   Updated: 2018/02/13 10:07:09 by iporsenn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*join_free(char **s1, char *s2)
+void	ft_putnbr_endl(int n)
 {
-	char	*dest;
+	long int nb;
 
-	if (!*s1 || !s2)
-		return (0);
-	dest = 0;
-	if (!(dest = ft_strnew(ft_strlen(*s1) + ft_strlen(s2))))
-		return (NULL);
-	ft_strcpy(dest, *s1);
-	ft_strcat(dest, (s2));
-	ft_memdel((void**)s1);
-	return (dest);
+	nb = n;
+	if (nb < 0)
+	{
+		ft_putchar('-');
+		nb = nb * -1;
+	}
+	if (nb >= 0 && nb <= 9)
+		ft_putchar(nb % 10 + 48);
+	else if (nb >= 10)
+	{
+		ft_putnbr(nb / 10);
+		ft_putchar(nb % 10 + 48);
+	}
+	ft_putchar('\n');
 }
