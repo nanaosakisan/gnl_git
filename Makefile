@@ -16,7 +16,7 @@ FLAGS = -Wall -Werror -Wextra
 
 SRC_PATH = ./
 SRC_NAME =	main.c				\
-			get_next_line_2.c
+			get_next_line.c
 
 SRC	= $(addprefix $(SRC_PATH), $(SRC_NAME))
 
