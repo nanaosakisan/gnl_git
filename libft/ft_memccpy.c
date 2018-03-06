@@ -18,13 +18,11 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 	unsigned char	*source;
 	unsigned char	car;
 
-	if (n > strlen(dst))
-		ft_putstr("SAUCISSE");
 	car = c;
 	dest = (unsigned char *)dst;
 	source = (unsigned char *)src;
 	if (!n)
-		return(NULL);
+		return (NULL);
 	while (n > 0)
 	{
 		*dest = *source;

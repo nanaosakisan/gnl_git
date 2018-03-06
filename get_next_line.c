@@ -12,10 +12,27 @@
 
 #include "get_next_line.h"
 
+static char	*ft_strjoin_free(char *s1, const char *s2)
+{
+	char	*dest;
+	int		len;
+
+	if (!s1 || !s2)
+		return (0);
+	dest = 0;
+	len = ft_strlen(s1) + ft_strlen(s2);
+	if (!(dest = ft_strnew(len)))
+		return (NULL);
+	ft_strcpy(dest, s1);
+	ft_strcat(dest, (s2));
+	ft_strdel(&s1);
+	return (dest);
+}
+
 static int	read_reste(char **reste, char **line, size_t len)
 {
-	int 	i;
-	int 	end;
+	int		i;
+	int		end;
 	char	tmp[len + 1];
 
 	tmp[len] = '\0';
@@ -41,7 +58,7 @@ static int	read_reste(char **reste, char **line, size_t len)
 
 static int	read_buff(char *buff, char **line, char **reste, size_t len)
 {
-	int 	i;
+	int		i;
 	char	tmp[len + 1];
 
 	ft_bzero(tmp, len + 1);
@@ -54,7 +71,7 @@ static int	read_buff(char *buff, char **line, char **reste, size_t len)
 			return (-1);
 	}
 	else
-		*line = ft_strjoin(*line, tmp);
+		*line = ft_strjoin_free(*line, tmp);
 	if (buff[i] == '\n')
 	{
 		if (!(*reste = ft_strnew(len - i)))
@@ -66,7 +83,7 @@ static int	read_buff(char *buff, char **line, char **reste, size_t len)
 	return (0);
 }
 
-int		get_next_line(int fd, char **line)
+int			get_next_line(int fd, char **line)
 {
 	int			ret;
 	int			success;
@@ -79,9 +96,7 @@ int		get_next_line(int fd, char **line)
 	success = 0;
 	ret = 0;
 	if (ft_strlen(reste))
-		if ((success = read_reste(&reste, line, ft_strlen(reste))) == -1)
-			return (-1);
-		if (success == 1)
+		if (read_reste(&reste, line, ft_strlen(reste)) == 1)
 			return (1);
 	ft_bzero(buff, BUFF_SIZE + 1);
 	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
