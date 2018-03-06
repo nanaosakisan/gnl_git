@@ -11,56 +11,53 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> //daw
 
-int		read_reste(char **reste, char **tmp, char **line)
+static int	read_reste(char **reste, char **line, size_t len)
 {
-	int i;
-	int end;
+	int 	i;
+	int 	end;
+	char	tmp[len + 1];
 
-	if (*reste[0] == '\n')
-		(*reste)++;
+	tmp[len] = '\0';
 	end = 0;
-	if (!(*line = (char*)ft_memalloc(ft_strlen(*reste) + 1)))
+	if (!(*line = ft_strnew(len)))
 		return (-1);
-	i = 0;
-	while ((*reste)[i] != '\n' && (*reste)[i] != '\0')
-	{
+	i = -1;
+	while ((*reste)[++i] != '\n' && (*reste)[i] != '\0')
 		(*line)[i] = (*reste)[i];
+	if ((*reste)[i] == '\n')
+	{
+		end = 1;
 		i++;
 	}
-	if ((*reste)[i] == '\n')
-		end = 1;
-	if (!(*tmp = (char*)ft_memalloc(ft_strlen(*reste) - i + 1)))
-		return (-1);
-	ft_strcpy(*tmp, *reste + i);
-	ft_bzero(*reste, (int)ft_strlen(*reste));
-	ft_strcpy(*reste, *tmp);
-	ft_strdel(tmp);
+	ft_bzero(tmp, len + 1);
+	ft_strcpy(tmp, *reste + i);
+	ft_bzero(*reste, len);
+	ft_strcpy(*reste, tmp);
 	if (end == 1)
 		return (1);
 	return (0);
 }
 
-int		read_buff(char *buff, char **tmp, char **line, char **reste)
+static int	read_buff(char *buff, char **line, char **reste, size_t len)
 {
 	int 	i;
-	size_t	len;
+	char	tmp[len + 1];
 
-	len = ft_strlen(buff);
-	if (!(*tmp = ft_memalloc(len + 1)))
-		return (-1);
+	ft_bzero(tmp, len + 1);
 	i = -1;
 	while (buff[++i] != '\n' && buff[i])
-		(*tmp)[i] = buff[i];
+		tmp[i] = buff[i];
 	if (!(*line))
-		if (!(*line = (char*)ft_memalloc(ft_strlen(*tmp) + 1)))
+	{
+		if (!(*line = ft_strdup(tmp)))
 			return (-1);
-	*line = ft_strjoin(*line, *tmp);
-	ft_strdel(tmp);
+	}
+	else
+		*line = ft_strjoin(*line, tmp);
 	if (buff[i] == '\n')
 	{
-		if (!(*reste = (char*)ft_memalloc(len - i + 1)))
+		if (!(*reste = ft_strnew(len - i)))
 			return (-1);
 		i++;
 		ft_strcpy(*reste, buff + i);
@@ -72,24 +69,27 @@ int		read_buff(char *buff, char **tmp, char **line, char **reste)
 int		get_next_line(int fd, char **line)
 {
 	int			ret;
-	char		*buff;
-	char		*tmp;
+	int			success;
+	char		buff[BUFF_SIZE + 1];
 	static char	*reste = NULL;
 
 	if (fd < 0 || !line)
 		return (-1);
 	*line = NULL;
-	tmp = NULL;
-	buff = NULL;
+	success = 0;
+	ret = 0;
 	if (ft_strlen(reste))
-		if ((read_reste(&reste, &tmp, line)) == 1)
+		if ((success = read_reste(&reste, line, ft_strlen(reste))) == -1)
+			return (-1);
+		if (success == 1)
 			return (1);
-	if (!(buff = (char*)ft_memalloc(BUFF_SIZE + 1)))
-		return (-1);
+	ft_bzero(buff, BUFF_SIZE + 1);
 	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		buff[ret] = '\0';
-		if (read_buff(buff, &tmp, line, &reste) == 1)
+		if ((success = read_buff((char*)&buff, line, &reste, BUFF_SIZE)) == -1)
+			return (-1);
+		if (success == 1)
 			return (1);
 	}
 	if (!ft_strlen(reste) && ret == 0 && !ft_strlen(*line))

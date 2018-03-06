@@ -25,15 +25,9 @@ int				main(void)
 
 	filename = "one_big_fat_line.txt";
 	fd = open(filename, O_RDONLY);
-	if (fd > 2)
-	{
-		line = NULL;
-		while ((ret = get_next_line(fd, &line)) > 0)
-		{
-			ft_putstr("line = ");
-			ft_putendl(line);
-		}
-		close(fd);
-	}
+	line = NULL;
+	while ((ret = get_next_line(fd, &line)) == 1)
+		ft_putendl(line);
+	close(fd);
 	return (0);
 }
